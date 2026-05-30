@@ -1,19 +1,19 @@
 <?php
-
+ 
 use Illuminate\Support\Facades\Route;
 use App\Http\Controllers\ProductController;
 use App\Http\Controllers\CartController;
 use App\Http\Controllers\CheckoutController;
-
+ 
 /*
 |--------------------------------------------------------------------------
 | Web Routes — E-Commerce UMKM Kuliner
 |--------------------------------------------------------------------------
 */
-
+ 
 // ── Katalog Produk ────────────────────────────────────────────────────────
 Route::get('/', [ProductController::class, 'index'])->name('catalog.index');
-
+ 
 // ── Keranjang Belanja ─────────────────────────────────────────────────────
 Route::prefix('cart')->name('cart.')->group(function () {
     Route::get('/',               [CartController::class, 'index'])->name('index');
@@ -22,16 +22,19 @@ Route::prefix('cart')->name('cart.')->group(function () {
     Route::delete('/remove/{id}', [CartController::class, 'remove'])->name('remove');
     Route::delete('/clear',       [CartController::class, 'clear'])->name('clear');
 });
-
+ 
+// ── Halaman Statis ────────────────────────────────────────────────────────
+Route::view('/contact', 'contact')->name('contact');
+ 
 // ── Checkout & Pembayaran ─────────────────────────────────────────────────
 Route::prefix('checkout')->name('checkout.')->group(function () {
-
+ 
     // Form data pengiriman
     Route::get('/',         [CheckoutController::class, 'index'])->name('index');
-
+ 
     // Proses form → buat order → redirect ke Midtrans
     Route::post('/process', [CheckoutController::class, 'process'])->name('process');
-
+ 
     // Halaman finish (callback redirect dari Midtrans Snap setelah bayar)
     Route::get('/finish',   [CheckoutController::class, 'finish'])->name('finish');
 });
